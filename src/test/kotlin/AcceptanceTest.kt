@@ -2,7 +2,7 @@ import org.amshove.kluent.shouldBe
 import org.junit.Before
 import org.junit.Test
 
-class EdhDeckGeneratorTest {
+class AcceptanceTest {
 
     var deck: Deck = generate()
 
@@ -23,8 +23,11 @@ class EdhDeckGeneratorTest {
     }
 
     @Test
-    fun testHasAMixOfCardTypes() {
-        assert(deck.creatures.size > 20 && deck.creatures.size < 30)
-        assert(deck.spells.size > 8 && deck.spells.size < 12)
+    fun testDeckOnlyHasCardsWithCommanderColorIdentity() {
+        val general = deck.general
+
+        val badCards = deck.cards.filter { card -> !card.legalForCommander(general) }
+
+        assert(badCards.size == 0, {"Cards included that are not allowed for the $general: $badCards"})
     }
 }

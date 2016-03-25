@@ -37,10 +37,13 @@ fun import(): Collection<Card> {
             listOf<Supertype>()
         }
 
+        val colorIdentity: List<String> = rawCard["colorIdentity"] as List<String>? ?: listOf()
+
         Card(
             rawCard["name"] as String,
             types,
-            supertypes
+            supertypes,
+            colorIdentity
         )
     }
 
