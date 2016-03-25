@@ -1,24 +1,25 @@
 
 import Supertype.Legendary
 import Type.*
+import random.sample
 import random.shuffle
 
 
 fun generate(): Deck {
-
     val cardPool = import()
-            .sortedBy { it.name }
 
-    val general = cardPool.filter {
-        it.supertypes.contains(Legendary)
-    }.first()
+    val general = randomGeneral(cardPool)
 
-    val cards = cardPool.shuffle().take(99)
+    val cards = cardPool.sample(99)
 
     return Deck(cards, general)
 }
 
-data class Deck(val cards: List<Card>, val general: Card) : Collection<Card> by cards {
+private fun randomGeneral(cardPool: Collection<Card>): Card {
+    return cardPool.shuffle().first { it.isLegendary }
+}
+
+data class Deck(val cards: Collection<Card>, val general: Card) : Collection<Card> by cards {
     val spells: List<Card> = cards.filter(Card::isSpell)
     val creatures: List<Card> = cards.filter(Card::isCreature)
 }
