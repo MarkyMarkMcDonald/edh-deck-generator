@@ -11,3 +11,7 @@ fun <E> Collection<E>.shuffle(): Collection<E> {
 fun <E> Collection<E>.sample(amount: Int): Collection<E> {
     return this.shuffle().take(amount)
 }
+
+fun <E> Collection<E>.sample(): E {
+    return this.shuffle().first()
+}
