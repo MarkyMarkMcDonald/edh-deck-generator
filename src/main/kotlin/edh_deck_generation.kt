@@ -1,4 +1,5 @@
 
+import Supertype.Basic
 import Supertype.Legendary
 import Type.*
 import random.sample
@@ -28,6 +29,7 @@ class Card (val name: String, val types: List<Type>, val supertypes: List<Supert
     val isLegendary: Boolean = supertypes.contains(Legendary)
     val isCreature: Boolean = types.contains(Creature)
     val isSpell: Boolean = types.contains(Instant) or types.contains(Sorcery)
+    val isBasic: Boolean = supertypes.contains(Basic)
 
     fun legalForCommander(general: Card): Boolean {
         return colorIdentities.subtract(general.colorIdentities).isEmpty()

@@ -30,4 +30,10 @@ class AcceptanceTest {
 
         assert(badCards.size == 0, {"Cards included that are not allowed for the $general: $badCards"})
     }
+
+    @Test
+    fun testThereAreOnlyRepeatsOfBasics() {
+        val nonBasics = deck.cards.filterNot(Card::isBasic)
+        assert(nonBasics.distinctBy(Card::name).size == nonBasics.size)
+    }
 }
