@@ -16,7 +16,7 @@ fun generate(): Deck {
 }
 
 private fun randomGeneral(cardPool: Collection<Card>): Card {
-    return cardPool.shuffle().first { it.isLegendary }
+    return cardPool.shuffle().first { it.isLegendary and it.isCreature }
 }
 
 data class Deck(val cards: Collection<Card>, val general: Card) : Collection<Card> by cards {
