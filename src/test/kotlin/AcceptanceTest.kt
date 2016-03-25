@@ -36,4 +36,11 @@ class AcceptanceTest {
         val nonBasics = deck.cards.filterNot(Card::isBasic)
         assert(nonBasics.distinctBy(Card::name).size == nonBasics.size)
     }
+
+    @Test
+    fun testThereIsAMixOfCardTypes() {
+        assert(deck.creatures.size >= 30, {"There should be at least 15 creatures"})
+        assert(deck.spells.size >= 20, {"There should be at least 15 spells"})
+        assert(deck.lands.size >= 30, {"There should be at least 30 lands"})
+    }
 }

@@ -8,10 +8,17 @@ import random.shuffle
 
 fun generate(): Deck {
     val cardPool = import()
-
     val general = randomGeneral(cardPool)
+    val allowedPool = cardPool.filter { it.legalForCommander(general) }
+    val basicLands = allowedPool.filter(Card::isBasic).filter(Card::isLand)
+    val nonLands = allowedPool.minus(basicLands)
 
-    val cards = cardPool.filter { card -> card.legalForCommander(general) }.sample(99)
+    val lands = IntRange(1,30).map() { basicLands.sample() }
+    val spells = nonLands.filter(Card::isSpell).sample(20)
+    val creatures = nonLands.filter(Card::isCreature).sample(30)
+    val filler = nonLands.sample(29)
+
+    val cards = lands.plus(spells).plus(creatures).plus(filler)
 
     return Deck(cards, general)
 }
@@ -21,6 +28,7 @@ private fun randomGeneral(cardPool: Collection<Card>): Card {
 }
 
 data class Deck(val cards: Collection<Card>, val general: Card) : Collection<Card> by cards {
+    val lands: List<Card> = cards.filter(Card::isLand)
     val spells: List<Card> = cards.filter(Card::isSpell)
     val creatures: List<Card> = cards.filter(Card::isCreature)
 }
@@ -30,6 +38,7 @@ class Card (val name: String, val types: List<Type>, val supertypes: List<Supert
     val isCreature: Boolean = types.contains(Creature)
     val isSpell: Boolean = types.contains(Instant) or types.contains(Sorcery)
     val isBasic: Boolean = supertypes.contains(Basic)
+    val isLand: Boolean = types.contains(Land)
 
     fun legalForCommander(general: Card): Boolean {
         return colorIdentities.subtract(general.colorIdentities).isEmpty()
