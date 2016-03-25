@@ -1,0 +1,11 @@
+fun main(args: Array<String>) {
+    val deck = generate()
+    val general = deck.general
+    val cards = deck.cards.sortedBy { it.types.firstOrNull() }
+    println("Your general is $general!")
+
+    val cardsWithQuantity = cards.groupBy(Card::name).mapValues { it.component2().size }
+    for ((name, quantity) in cardsWithQuantity) {
+        println("$quantity: $name")
+    }
+}

@@ -51,14 +51,14 @@ class Card (val name: String, val types: List<Type>, val supertypes: List<Supert
 }
 
 enum class Type {
-    Artifact,
     Creature,
+    Planeswalker,
+    Artifact,
     Enchantment,
     Instant,
-    Land,
-    Planeswalker,
     Sorcery,
-    Tribal
+    Tribal,
+    Land
 }
 
 enum class Supertype() {
