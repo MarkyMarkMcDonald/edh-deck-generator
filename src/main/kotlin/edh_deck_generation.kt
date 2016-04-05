@@ -67,3 +67,7 @@ enum class Supertype() {
     World,
     Snow
 }
+
+fun Collection<Card>.duplicates(): Map<String, List<Card>> {
+    return this.filterNot(Card::isBasic).groupBy { card -> card.name }.filter { something -> something.value.size > 1 }
+}

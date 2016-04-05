@@ -34,7 +34,11 @@ class AcceptanceTest {
     @Test
     fun testThereAreOnlyRepeatsOfBasics() {
         val nonBasics = deck.cards.filterNot(Card::isBasic)
-        assert(nonBasics.distinctBy(Card::name).size == nonBasics.size)
+
+        val nonBasicsAreNotRepeated: Boolean = nonBasics.distinctBy(Card::name).size == nonBasics.size
+        val duplicates = nonBasics.groupBy { it.name }.filter { duplicateMapKey -> duplicateMapKey.value.size > 1 }
+
+        assert(nonBasicsAreNotRepeated) { "There were duplicates of non-basic cards. My best guess: $duplicates"}
     }
 
     @Test
