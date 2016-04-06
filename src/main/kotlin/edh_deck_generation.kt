@@ -16,7 +16,8 @@ fun generate(): Deck {
     val lands = IntRange(1,30).map() { basicLands.sample() }
     val spells = nonLands.filter(Card::isSpell).sample(20)
     val creatures = nonLands.filter(Card::isCreature).sample(30)
-    val filler = nonLands.sample(29)
+
+    val filler = nonLands.minus(spells).minus(creatures).sample(19)
 
     val cards = lands.plus(spells).plus(creatures).plus(filler)
 

@@ -1,6 +1,8 @@
+
 import org.amshove.kluent.shouldBe
 import org.junit.Before
 import org.junit.Test
+import java.util.stream.IntStream
 
 class AcceptanceTest {
 
@@ -33,6 +35,12 @@ class AcceptanceTest {
 
     @Test
     fun testThereAreOnlyRepeatsOfBasics() {
+        IntStream.range(1, 100).parallel().forEach {
+            assertNoDuplicatesInDeck(generate())
+        }
+    }
+
+    fun assertNoDuplicatesInDeck(deck: Deck) {
         val nonBasics = deck.cards.filterNot(Card::isBasic)
 
         val nonBasicsAreNotRepeated: Boolean = nonBasics.distinctBy(Card::name).size == nonBasics.size
