@@ -33,13 +33,16 @@ data class Deck(val cards: Collection<Card>, val general: Card) : Collection<Car
     val creatures: List<Card> = cards.filter(Card::isCreature)
 }
 
-class Card (val name: String, val types: List<Type>, val supertypes: List<Supertype>, private val colorIdentities: List<String>) {
+class Card (val name: String,
+            val types: List<Type>,
+            private val supertypes: List<Supertype>,
+            private val colorIdentities: List<String>) {
+
     val isLegendary: Boolean = supertypes.contains(Legendary)
     val isCreature: Boolean = types.contains(Creature)
     val isSpell: Boolean = types.contains(Instant) or types.contains(Sorcery)
     val isBasic: Boolean = supertypes.contains(Basic)
     val isLand: Boolean = types.contains(Land)
-
     fun legalForCommander(general: Card): Boolean {
         return colorIdentities.subtract(general.colorIdentities).isEmpty()
     }
