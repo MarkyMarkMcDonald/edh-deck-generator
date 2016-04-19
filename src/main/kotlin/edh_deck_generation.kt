@@ -6,8 +6,7 @@ import random.sample
 import random.shuffle
 
 
-fun generate(): Deck {
-    val cardPool = import()
+fun generate(cardPool: Collection<Card> = import()): Deck {
     val general = randomGeneral(cardPool)
     val allowedPool = cardPool.filter { it.legalForCommander(general) }
     val basicLands = allowedPool.filter(Card::isBasic).filter(Card::isLand)
