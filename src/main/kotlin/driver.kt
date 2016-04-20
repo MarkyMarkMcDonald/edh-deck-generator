@@ -6,6 +6,6 @@ fun main(args: Array<String>) {
 
     val cardsWithQuantity = cards.groupBy(Card::name).mapValues { cardsByName -> cardsByName.value.size }
     for ((name, quantity) in cardsWithQuantity) {
-        println("$quantity: $name")
+        println("$quantity $name")
     }
 }
