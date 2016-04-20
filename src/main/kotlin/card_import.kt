@@ -14,7 +14,6 @@ private class ResourceLoader {
     }
 }
 
-
 // TODO: Try using jackson instead of gson for better Enum / object mapping
 fun import(): Collection<Card> {
     val jsonSource = ResourceLoader().load()

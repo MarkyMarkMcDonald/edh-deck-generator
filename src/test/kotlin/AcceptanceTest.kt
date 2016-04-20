@@ -9,10 +9,11 @@ import java.util.stream.IntStream
 class AcceptanceTest {
 
     var deck: Deck = generate()
+    val allCardsEver = import()
 
     @Before
     fun setUp() {
-        deck = generate()
+        deck = generate(allCardsEver)
     }
 
     @Test
@@ -38,7 +39,7 @@ class AcceptanceTest {
     @Test
     fun testThereAreOnlyRepeatsOfBasics() {
         IntStream.range(1, 100).parallel().forEach {
-            assertNoDuplicatesInDeck(generate())
+            assertNoDuplicatesInDeck(generate(allCardsEver))
         }
     }
 
@@ -60,11 +61,9 @@ class AcceptanceTest {
 
     @Test
     fun testFavoringRecommendedCards() {
-        val cardPool = import()
+        val forcedCommander = allCardsEver.find { it.name == "Wrexial, the Risen Deep" }!!
 
-        val forcedCommander = cardPool.find { it.name == "Wrexial, the Risen Deep" }!!
-
-        val cardPoolWithForcedGeneral = cardPool.withoutGenerals().plus(forcedCommander)
+        val cardPoolWithForcedGeneral = allCardsEver.withoutGenerals().plus(forcedCommander)
 
         val recommendations = mapOf(
                 "Wrexial, the Risen Deep" to listOf(
