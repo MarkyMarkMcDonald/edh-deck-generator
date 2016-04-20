@@ -1,5 +1,5 @@
 fun main(args: Array<String>) {
-    val deck = generate()
+    val deck = generate(recommendations = mapOf())
     val general = deck.general
     val cards = deck.cards.sortedBy { it.types.firstOrNull() }
     println("Your general is $general!")

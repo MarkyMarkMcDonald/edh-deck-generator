@@ -1,5 +1,7 @@
 
-import org.amshove.kluent.shouldBe
+import Supertype.Legendary
+import Type.Creature
+import org.amshove.kluent.*
 import org.junit.Before
 import org.junit.Test
 import java.util.stream.IntStream
@@ -55,4 +57,38 @@ class AcceptanceTest {
         assert(deck.spells.size >= 20, {"There should be at least 15 spells"})
         assert(deck.lands.size >= 30, {"There should be at least 30 lands"})
     }
+
+    @Test
+    fun testFavoringRecommendedCards() {
+        val cardPool = import()
+
+        val forcedCommander = cardPool.find { it.name == "Wrexial, the Risen Deep" }!!
+
+        val cardPoolWithForcedGeneral = cardPool.withoutGenerals().plus(forcedCommander)
+
+        val recommendations = mapOf(
+                "Wrexial, the Risen Deep" to listOf(
+                    "Storm Crow",
+                    "See Beyond",
+                    "Stormtide Leviathan",
+                    "Some Card That Does Not Exist"
+                )
+        )
+
+        deck = generate(cardPoolWithForcedGeneral, recommendations)
+
+        deck.general shouldBe forcedCommander
+        deck.cards shouldContainCard "Storm Crow"
+        deck.cards shouldContainCard "See Beyond"
+        deck.cards shouldContainCard "Stormtide Leviathan"
+        deck.cards shouldNotContainCard "Some Card That Does Not Exist"
+    }
+
+    fun Collection<Card>.withoutGenerals(): Collection<Card> {
+        val generals = this.filter { it.isLegendary and it.isCreature }
+        return this.minus(generals)
+    }
+
+    infix fun Iterable<Card>.shouldContainCard(cardName: String) = this.map { it.name } `should contain` cardName
+    infix fun Iterable<Card>.shouldNotContainCard(cardName: String) = this.map { it.name } `should not contain` cardName
 }
