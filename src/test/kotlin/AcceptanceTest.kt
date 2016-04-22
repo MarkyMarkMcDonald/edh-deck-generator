@@ -65,16 +65,14 @@ class AcceptanceTest {
 
         val cardPoolWithForcedGeneral = allCardsEver.withoutGenerals().plus(forcedCommander)
 
-        val recommendations = mapOf(
-                "Wrexial, the Risen Deep" to listOf(
-                    "Storm Crow",
-                    "See Beyond",
-                    "Stormtide Leviathan",
-                    "Some Card That Does Not Exist"
-                )
+        val recommendations = listOf(
+            "Storm Crow",
+            "See Beyond",
+            "Stormtide Leviathan",
+            "Some Card That Does Not Exist"
         )
 
-        deck = generate(cardPoolWithForcedGeneral, recommendations)
+        deck = generate(cardPoolWithForcedGeneral, {recommendations})
 
         deck.general shouldBe forcedCommander
         deck.cards shouldContainCard "Storm Crow"

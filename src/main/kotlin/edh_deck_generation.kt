@@ -6,14 +6,16 @@ import random.sample
 import random.shuffle
 
 
-fun generate(cardPool: Collection<Card> = import(), recommendations: Map<String, List<String>> = mapOf()): Deck {
+fun generate(cardPool: Collection<Card> = import(), recommendationsForGeneral: (commanderName: String) -> List<String> = {listOf()}): Deck {
     val general = randomGeneral(cardPool)
     val allowedPool = cardPool.filter { it.legalForCommander(general) }
     val basicLands = allowedPool.filter(Card::isBasic).filter(Card::isLand)
     val nonLands = allowedPool.minus(basicLands)
 
+    val recommendations = recommendationsForGeneral(general.name)
+
     val recommendedCards = cardPool.filter {
-        card -> recommendations[general.name]?.contains(card.name) ?: false
+        card -> recommendations.contains(card.name)
     }
 
     val lands = IntRange(1,30).map() { basicLands.sample() }
