@@ -18,8 +18,9 @@ fun generate(cardPool: Collection<Card> = import(), recommendations: (commanderN
         card -> fetchedRecommendations.contains(card.name)
     }
 
+
     val recommendedLands = recommendedCards.filter(Card::isLand)
-    val randomLands = IntRange(recommendedLands.size,36).map() { basicLands.sample() }
+    val lands = fillBag(36, recommendedLands, filler = basicLands)
 
     val recommendedSpells = recommendedCards.filter(Card::isSpell)
     val randomSpells = (nonLands - recommendedSpells).filter(Card::isSpell).sample(20 - recommendedSpells.size)
@@ -27,10 +28,18 @@ fun generate(cardPool: Collection<Card> = import(), recommendations: (commanderN
     val recommendedCreatures = recommendedCards.filter(Card::isCreature)
     val randomCreatures = (nonLands - recommendedCreatures).filter(Card::isCreature).sample(30 - recommendedCreatures.size)
 
-    val cards = recommendedCards + randomLands + randomSpells + randomCreatures
+    val cards = recommendedCards - recommendedLands + lands + randomSpells + randomCreatures
     val randomFiller = (nonLands - recommendedCards - randomSpells - randomCreatures).sample(99 - cards.size)
 
     return Deck(cards + randomFiller, general)
+}
+
+fun fillBag(desiredSize: Int, recommendations: Collection<Card>, filler: Collection<Card>): Collection<Card> {
+    if (recommendations.size > desiredSize) return recommendations.sample(desiredSize)
+
+    val cardsNeeded = desiredSize - recommendations.size
+
+    return recommendations + IntRange(1, cardsNeeded).map { filler.sample() }
 }
 
 private fun randomGeneral(cardPool: Collection<Card>): Card {
