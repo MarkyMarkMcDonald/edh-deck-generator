@@ -9,6 +9,7 @@ fun <E> Collection<E>.shuffle(): Collection<E> {
 }
 
 fun <E> Collection<E>.sample(amount: Int): Collection<E> {
+    if (amount <= 0) return emptyList()
     return this.shuffle().take(amount)
 }
 

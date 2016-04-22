@@ -6,27 +6,31 @@ import random.sample
 import random.shuffle
 
 
-fun generate(cardPool: Collection<Card> = import(), recommendationsForGeneral: (commanderName: String) -> List<String> = {listOf()}): Deck {
+fun generate(cardPool: Collection<Card> = import(), recommendations: (commanderName: String) -> Collection<String> = ::recommendations): Deck {
     val general = randomGeneral(cardPool)
     val allowedPool = cardPool.filter { it.legalForCommander(general) }
     val basicLands = allowedPool.filter(Card::isBasic).filter(Card::isLand)
     val nonLands = allowedPool.minus(basicLands)
 
-    val recommendations = recommendationsForGeneral(general.name)
+    val fetchedRecommendations = recommendations(general.name)
 
     val recommendedCards = cardPool.filter {
-        card -> recommendations.contains(card.name)
+        card -> fetchedRecommendations.contains(card.name)
     }
 
-    val lands = IntRange(1,30).map() { basicLands.sample() }
-    val spells = nonLands.filter(Card::isSpell).sample(20)
-    val creatures = nonLands.filter(Card::isCreature).sample(30)
+    val recommendedLands = recommendedCards.filter(Card::isLand)
+    val randomLands = IntRange(recommendedLands.size,36).map() { basicLands.sample() }
 
-    val filler = nonLands.minus(spells).minus(creatures).sample(19)
+    val recommendedSpells = recommendedCards.filter(Card::isSpell)
+    val randomSpells = (nonLands - recommendedSpells).filter(Card::isSpell).sample(20 - recommendedSpells.size)
 
-    val cards = recommendedCards.plus(lands).plus(spells).plus(creatures).plus(filler)
+    val recommendedCreatures = recommendedCards.filter(Card::isCreature)
+    val randomCreatures = (nonLands - recommendedCreatures).filter(Card::isCreature).sample(30 - recommendedCreatures.size)
 
-    return Deck(cards, general)
+    val cards = recommendedCards + randomLands + randomSpells + randomCreatures
+    val randomFiller = (nonLands - recommendedCards - randomSpells - randomCreatures).sample(99 - cards.size)
+
+    return Deck(cards + randomFiller, general)
 }
 
 private fun randomGeneral(cardPool: Collection<Card>): Card {
@@ -70,13 +74,9 @@ enum class Type {
     Land
 }
 
-enum class Supertype() {
+enum class Supertype {
     Legendary,
     Basic,
     World,
     Snow
-}
-
-fun Collection<Card>.duplicates(): Map<String, List<Card>> {
-    return this.filterNot(Card::isBasic).groupBy { card -> card.name }.filter { something -> something.value.size > 1 }
 }

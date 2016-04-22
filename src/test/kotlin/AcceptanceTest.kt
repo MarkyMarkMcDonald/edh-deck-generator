@@ -1,6 +1,4 @@
 
-import Supertype.Legendary
-import Type.Creature
 import org.amshove.kluent.*
 import org.junit.Before
 import org.junit.Test
