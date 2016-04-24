@@ -12,7 +12,7 @@ fun generate(cardPool: Collection<Card> = import(),
 
     val allowedPool = cardPool.filter { it.legalForCommander(general) }
     val basicLands = allowedPool.filter(Card::isBasic).filter(Card::isLand)
-    val nonLands = allowedPool.minus(basicLands)
+    val nonLands = allowedPool.filterNot(Card::isLand)
 
     val fetchedRecommendations = recommendations(general.name)
 
