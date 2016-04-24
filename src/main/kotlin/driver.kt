@@ -3,7 +3,9 @@ import random.sample
 import java.net.URLEncoder
 
 fun main(args: Array<String>) {
-    val deck = generate(recommendations = ::recommendations)
+    val deck = generate(
+            recommendations = ::recommendations,
+            commanderChoice = ::randomCommander)
     val general = deck.general
     val cards = deck.cards.sortedBy { it.types.firstOrNull() }
 
@@ -21,4 +23,8 @@ fun recommendations(commanderName: String): Collection<String> {
     val url = "http://edhrec.com/route/?cc=" + URLEncoder.encode(commanderName, "UTF-8")
     val html = Jsoup.connect(url).get().body().html()
     return cardNameRecommendations(html).sample(50)
+}
+
+fun randomCommander(names: Collection<String>) : String {
+    return names.sample()
 }

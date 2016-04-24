@@ -3,11 +3,13 @@ import Supertype.Basic
 import Supertype.Legendary
 import Type.*
 import random.sample
-import random.shuffle
 
+fun generate(cardPool: Collection<Card> = import(),
+             recommendations: (commanderName: String) -> Collection<String> = ::recommendations,
+             commanderChoice: (Collection<String>) -> String = ::randomCommander) : Deck {
 
-fun generate(cardPool: Collection<Card> = import(), recommendations: (commanderName: String) -> Collection<String> = ::recommendations): Deck {
-    val general = randomGeneral(cardPool)
+    val general = general(cardPool, commanderChoice)
+
     val allowedPool = cardPool.filter { it.legalForCommander(general) }
     val basicLands = allowedPool.filter(Card::isBasic).filter(Card::isLand)
     val nonLands = allowedPool.minus(basicLands)
@@ -33,8 +35,18 @@ fun generate(cardPool: Collection<Card> = import(), recommendations: (commanderN
     return Deck(cards + randomFiller, general)
 }
 
-private fun randomGeneral(cardPool: Collection<Card>): Card {
-    return cardPool.shuffle().first { it.isLegendary and it.isCreature }
+private fun Collection<Card>.generals() : Collection<Card> {
+    return this.filter { it.isLegendary and it.isCreature }
+}
+
+private fun Collection<Card>.byName(name: String) : Card {
+    return this.first { card -> card.name.equals(name)}
+}
+
+private fun general(cardPool: Collection<Card>, commanderChoice: (Collection<String>) -> String): Card {
+    val possibleGenerals = cardPool.generals().map(Card::name)
+    val generalName = commanderChoice(possibleGenerals)
+    return cardPool.byName(generalName)
 }
 
 data class Deck(val cards: Collection<Card>, val general: Card) : Collection<Card> by cards {

@@ -26,6 +26,12 @@ class AcceptanceTest {
     }
 
     @Test
+    fun testCommanderCanBeChosen() {
+        deck = generate(allCardsEver, {listOf()}, ::chooseWrexial)
+        deck.general.name shouldEqual "Wrexial, the Risen Deep"
+    }
+
+    @Test
     fun testDeckOnlyHasCardsWithCommanderColorIdentity() {
         val general = deck.general
 
@@ -87,3 +93,5 @@ class AcceptanceTest {
     infix fun Iterable<Card>.shouldContainCard(cardName: String) = this.map { it.name } `should contain` cardName
     infix fun Iterable<Card>.shouldNotContainCard(cardName: String) = this.map { it.name } `should not contain` cardName
 }
+
+fun chooseWrexial(commanders: Collection<String>): String { return "Wrexial, the Risen Deep" }
