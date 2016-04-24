@@ -65,10 +65,6 @@ class AcceptanceTest {
 
     @Test
     fun testFavoringRecommendedCards() {
-        val forcedCommander = allCardsEver.find { it.name == "Wrexial, the Risen Deep" }!!
-
-        val cardPoolWithForcedGeneral = allCardsEver.withoutGenerals().plus(forcedCommander)
-
         val recommendations = listOf(
             "Storm Crow",
             "See Beyond",
@@ -76,18 +72,13 @@ class AcceptanceTest {
             "Some Card That Does Not Exist"
         )
 
-        deck = generate(cardPoolWithForcedGeneral, {recommendations})
+        deck = generate(recommendations = {recommendations}, commanderChoice = {"Wrexial, the Risen Deep"})
 
-        deck.general shouldBe forcedCommander
+        deck.general.name shouldEqual "Wrexial, the Risen Deep"
         deck.cards shouldContainCard "Storm Crow"
         deck.cards shouldContainCard "See Beyond"
         deck.cards shouldContainCard "Stormtide Leviathan"
         deck.cards shouldNotContainCard "Some Card That Does Not Exist"
-    }
-
-    fun Collection<Card>.withoutGenerals(): Collection<Card> {
-        val generals = this.filter { it.isLegendary and it.isCreature }
-        return this.minus(generals)
     }
 
     infix fun Iterable<Card>.shouldContainCard(cardName: String) = this.map { it.name } `should contain` cardName
