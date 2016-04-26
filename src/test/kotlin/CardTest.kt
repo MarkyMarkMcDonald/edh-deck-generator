@@ -4,7 +4,7 @@ import kotlin.test.assertFalse
 class CardTest {
 
     @Test
-    fun testLegalForCommander() {
+    fun legalForCommander() {
         val general: Card = Card("", listOf(), listOf(), listOf("U","B"))
 
         val matchingColorsCard: Card = Card("", listOf(), listOf(), listOf("U","B"))

@@ -1,6 +1,6 @@
 import java.io.InputStreamReader
 
-val baruFistOfKrosa: () -> String = {
+val baruFistOfKrosaFixture: () -> String = {
     ResourceFileReader().getFileAsString("baruFistOfKrosaEdhRec.html")
 }
 

@@ -15,24 +15,24 @@ class AcceptanceTest {
     }
 
     @Test
-    fun testHas99Cards() {
+    fun has99Cards() {
         assert(deck.size == 99)
     }
 
     @Test
-    fun testHasOneCommander() {
+    fun hasOneCommander() {
         deck.general.isLegendary shouldBe true
         deck.general.isCreature shouldBe true
     }
 
     @Test
-    fun testCommanderCanBeChosen() {
+    fun commanderCanBeChosen() {
         deck = generate(allCardsEver, {listOf()}, ::chooseWrexial)
         deck.general.name shouldEqual "Wrexial, the Risen Deep"
     }
 
     @Test
-    fun testDeckOnlyHasCardsWithCommanderColorIdentity() {
+    fun deckOnlyHasCardsWithCommanderColorIdentity() {
         val general = deck.general
 
         val badCards = deck.cards.filter { card -> !card.legalForCommander(general) }
@@ -41,7 +41,7 @@ class AcceptanceTest {
     }
 
     @Test
-    fun testThereAreOnlyRepeatsOfBasics() {
+    fun thereAreOnlyRepeatsOfBasics() {
         IntStream.range(1, 100).parallel().forEach {
             assertNoDuplicatesInDeck(generate(allCardsEver))
         }
@@ -57,14 +57,14 @@ class AcceptanceTest {
     }
 
     @Test
-    fun testThereIsAMixOfCardTypes() {
+    fun thereIsAMixOfCardTypes() {
         assert(deck.creatures.size >= 30, {"There should be at least 15 creatures"})
         assert(deck.spells.size >= 20, {"There should be at least 15 spells"})
         assert(deck.lands.size >= 30, {"There should be at least 30 lands"})
     }
 
     @Test
-    fun testFavoringRecommendedCards() {
+    fun favoringRecommendedCards() {
         val recommendations = listOf(
             "Storm Crow",
             "See Beyond",

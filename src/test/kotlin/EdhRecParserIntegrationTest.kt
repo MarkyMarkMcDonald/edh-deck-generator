@@ -5,8 +5,8 @@ import kotlin.test.assertTrue
 class EdhRecParserIntegrationTest {
 
     @Test
-    fun testBaruFistOfKrosa() {
-        val recommendations: Collection<String> = cardNameRecommendations(baruFistOfKrosa())
+    fun baruFistOfKrosa() {
+        val recommendations: Collection<String> = cardNameRecommendations(baruFistOfKrosaFixture())
         assertTrue(recommendations.size > 100)
     }
 
