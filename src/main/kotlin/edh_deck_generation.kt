@@ -39,11 +39,7 @@ fun generate(cardPool: Collection<Card> = import(),
 
 fun getCost(knownPrices: () -> Map<String, Double>, cards: List<Card>): Double {
     val priceMap = knownPrices()
-    var cost: Double = 0.0
-    for (card in cards) {
-        cost += priceMap[card.name] ?: 0.0
-    }
-    return cost
+    return cards.sumByDouble { card -> priceMap[card.name] ?: 0.0 }
 }
 
 private fun Collection<Card>.generals() : Collection<Card> {
