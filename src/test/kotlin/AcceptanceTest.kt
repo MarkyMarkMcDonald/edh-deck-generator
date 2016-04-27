@@ -27,7 +27,7 @@ class AcceptanceTest {
 
     @Test
     fun commanderCanBeChosen() {
-        deck = generate(allCardsEver, {listOf()}, ::chooseWrexial)
+        deck = generate(allCardsEver, {listOf()}, commanderChoice = ::chooseWrexial)
         deck.general.name shouldEqual "Wrexial, the Risen Deep"
     }
 
@@ -79,6 +79,22 @@ class AcceptanceTest {
         deck.cards shouldContainCard "See Beyond"
         deck.cards shouldContainCard "Stormtide Leviathan"
         deck.cards shouldNotContainCard "Some Card That Does Not Exist"
+    }
+
+    @Test
+    fun showingTheCost() {
+        val recommendations = listOf(
+                "Storm Crow",
+                "See Beyond"
+        )
+        val knownPrices = mapOf(
+                Pair("Storm Crow", 34.33),
+                Pair("See Beyond", 1.00)
+        )
+        deck = generate(recommendations={recommendations},
+                knownPrices = {knownPrices},
+                commanderChoice = {"Wrexial, the Risen Deep"})
+        deck.cost shouldEqual 35.33
     }
 
     infix fun Iterable<Card>.shouldContainCard(cardName: String) = this.map { it.name } `should contain` cardName

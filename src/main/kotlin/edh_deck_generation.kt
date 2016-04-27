@@ -6,6 +6,7 @@ import random.sample
 
 fun generate(cardPool: Collection<Card> = import(),
              recommendations: (commanderName: String) -> Collection<String> = ::recommendations,
+             knownPrices: ()-> Map<String, Double> = ::knownPrices,
              commanderChoice: (Collection<String>) -> String = ::randomCommander) : Deck {
 
     val general = general(cardPool, commanderChoice)
@@ -29,10 +30,20 @@ fun generate(cardPool: Collection<Card> = import(),
     val recommendedCreatures = recommendedCards.filter(Card::isCreature)
     val randomCreatures = (nonLands - recommendedCreatures).filter(Card::isCreature).sample(30 - recommendedCreatures.size)
 
-    val cards = recommendedCards + randomLands + randomSpells + randomCreatures
+    var cards = recommendedCards + randomLands + randomSpells + randomCreatures
     val randomFiller = (nonLands - recommendedCards - randomSpells - randomCreatures).sample(99 - cards.size)
 
-    return Deck(cards + randomFiller, general)
+    cards += randomFiller
+    return Deck(cards, general, getCost(knownPrices, cards))
+}
+
+fun getCost(knownPrices: () -> Map<String, Double>, cards: List<Card>): Double {
+    val priceMap = knownPrices()
+    var cost: Double = 0.0
+    for (card in cards) {
+        cost += priceMap[card.name] ?: 0.0
+    }
+    return cost
 }
 
 private fun Collection<Card>.generals() : Collection<Card> {
@@ -49,7 +60,7 @@ private fun general(cardPool: Collection<Card>, commanderChoice: (Collection<Str
     return cardPool.byName(generalName)
 }
 
-data class Deck(val cards: Collection<Card>, val general: Card) : Collection<Card> by cards {
+data class Deck(val cards: Collection<Card>, val general: Card, val cost: Double) : Collection<Card> by cards {
     val lands: List<Card> = cards.filter(Card::isLand)
     val spells: List<Card> = cards.filter(Card::isSpell)
     val creatures: List<Card> = cards.filter(Card::isCreature)
