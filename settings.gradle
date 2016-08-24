@@ -16,4 +16,5 @@ include 'api'
 include 'services:webservice'
 */
 
+rootProject.buildFileName = 'build.gradle.kts'
 rootProject.name = 'edh-deck-generator'
